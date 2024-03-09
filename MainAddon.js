@@ -1,3 +1,14 @@
+// ==UserScript==
+// @name         Clever addons
+// @namespace    http://tampermonkey.net/
+// @version      open_beta_0.1
+// @description  Yeh
+// @author       ExonAuto
+// @match        https://clever.com/in/*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=clever.com
+// @grant        none
+// ==/UserScript==
+
 //
 //
 // main styling
@@ -233,7 +244,7 @@ function addBackBtn() {
 
 function openColor() 
 {
-  
+  // adds the html
   document.body.insertAdjacentHTML('beforeend', theCustomHtml);
 
   // don't have to add each for example
@@ -243,16 +254,17 @@ function openColor()
     classname = colorbox.dataset.classname
     styleType = colorbox.dataset.styletype
     
-    console.log(classname, styleType)
+    // console.log(classname, styleType)
 
     firstElementOfType = document.getElementsByClassName(classname)[0] // .style[styleType] )
     style = window.getComputedStyle(firstElementOfType)[styleType];
 
-    console.log(style)
+    // console.log(style)
 
     colorbox.value = parseColor(style).hex
     console.log(colorbox.value, parseColor(style).hex)
 
+    // so added but not completed.
     colorbox.addEventListener("input", (event) => {
       target = event.target
       classname = target.dataset.classname
@@ -264,6 +276,7 @@ function openColor()
       document.getElementById('exampleText').style[styleType] = value;
     });
     
+    // changed and submited.
     colorbox.addEventListener("change", (event) => {
       target = event.target
       classname = target.dataset.classname
@@ -276,22 +289,18 @@ function openColor()
 
   });
 
+  // 
   document.getElementById('fontSize').addEventListener("keyup", function() {
     if (this.value.length < 1) return; 
     if ( isNaN( this.value ) ) return this.value = 16
-
-    console.log(this.value)
 
     classname = this.dataset.classname
     styleType = this.dataset.styletype
     value = this.value
   
-    console.log(classname, styleType, value)
-
     changeStyle(classname, styleType, `${value}px`);
     
     document.getElementById('exampleText').style[styleType] = `${value}px`;
-    // do search for this.value here
   });
 }
 
@@ -339,47 +348,63 @@ window.openColor = openColor;
 window.closeView = closeView;
 window.addBackBtn = addBackBtn;
 
-// 
-//
-// add the help button
-//
-//
 
 // const html = `<div data-focus-lock-disabled="false"><div class="DeweyModal DisplayNameModal--container"><div class="DeweyModal--Background" aria-hidden="true" data-testid="DeweyModal--Background"></div><div data-testid="DeweyModal--Window" class="DeweyModal--Window DisplayNameModal--container DeweyModal--size--medium" role="dialog" aria-modal="true" aria-labelledby="modalTitleID"><div class="DeweyModal--Header"><div class="DeweyModal--Header--text"><div class="DeweyModal--Header--title" role="heading" aria-level="2" id="modalTitleID">Change Display Name</div></div><button data-testid="DeweyModal--Header--close" aria-label="Close modal" class="DeweyButton Button Button--linkPlain Button--medium DeweyModal--Header--close Button--IconOnly" type="button"><span class="DeweyIcon material-symbols-rounded material-symbols-rounded--bold Icon--20" role="img" aria-label="close Icon">close</span></button></div><div class="DeweyModal--Content"><main><div class="DisplayNameModal--descriptionText">Change how your page looks.<br>Your teachers will also see this.</div><div class="TextInput dewey--formElementSize--fullWidth DisplayNameModal--nameInput"><div class="TextInput--infoRow"><label class="TextInput--label" for="Name">Name</label><span aria-live="polite"></span></div><input id="Name" class="TextInput--input" name="Name" type="text" aria-invalid="false" aria-label="Name" value="Rafa Rutherford"></div><button aria-label="Change back to legal name" class="Button Button--linkPlain Button--regular DisplayNameModal--resetButton" type="button">Change back to legal name</button><div class="AlertBox2 AlertBox2--info"><div class="AlertBox2--contentContainer"><div><span aria-hidden="true" class="fa fa-exclamation-circle fa-fw AlertBox2--icon AlertBox2--icon--info"></span></div><div class="AlertBox2--content"><div>Note to teachers: you can turn this feature off by accessing this student’s profile in your teacher Portal.</div></div></div><div class="AlertBox2--buttons"></div></div></main></div><div class="DeweyModal--Footer" data-testid="DeweyModal--Footer"><button aria-label="Save" class="DeweyButton Button Button--primary Button--medium" type="button"><span>Save</span></button><button aria-label="Cancel" class="DeweyButton Button Button--secondary Button--medium" type="button"><span>Cancel</span></button></div></div></div>,</div>`
 
-portalButton = document.getElementById('TopBarPortalButton').parentElement
+window.onload = innit()
 
-newBtn = portalButton.cloneNode(true)
-
-// overwrite ids and testids.
-newBtnIdHolder = newBtn.children[0]
-newBtnIdHolder.id = 'settings'
-newBtnIdHolder.setAttribute('data-testid', 'topBarSettingsButton');
-
-newBtnImg = newBtn.getElementsByClassName('StudentTopBar--portalIcon')[0]
-  newBtnImg.src = 'data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAGVUlEQVR4nNWbXYhVVRTHf14uwyA2SMgwTcMkk5jYFCYTWZhUmA9WUtGHmRUJFdRDJUUU9GQQ4YOFWKRZyBSmFEFQ1ENESjmlYX71oSiWNahNapnp'
-
-newBtnTextHolder = newBtnImg.parentElement
-  newBtnTextHolder.textContent = 'Request link'
-
-newBtn.onclick = function () {
-  window.open('https://forms.gle/1sHZNaG2KfnSLfKD9')
-}
+function innit()
+{
+  console.log('innit')
   
-portalButton.parentElement.prepend(newBtn)
+  try {
+    parent = document.getElementsByClassName('Sidebar--container')[0].children[0]
+  } 
+  catch (e) 
+  {
+    return setTimeout(() => { innit() }, 150);
+  }
 
-// 
-//
-// adds the searchbar to the sidebar
-//
-//
+  
+  // 
+  //
+  // add the help button
+  //
+  //
+  portalButton = document.getElementById('TopBarPortalButton').parentElement
+  
+  newBtn = portalButton.cloneNode(true)
 
-parent = document.getElementsByClassName('Sidebar--container')[0].children[0]
+  // overwrite ids and testids.
+  newBtnIdHolder = newBtn.children[0]
+  newBtnIdHolder.id = 'settings'
+  newBtnIdHolder.setAttribute('data-testid', 'topBarSettingsButton');
+  
+  newBtnImg = newBtn.getElementsByClassName('StudentTopBar--portalIcon')[0]
+    newBtnImg.src = 'data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAGVUlEQVR4nNWbXYhVVRTHf14uwyA2SMgwTcMkk5jYFCYTWZhUmA9WUtGHmRUJFdRDJUUU9GQQ4YOFWKRZyBSmFEFQ1ENESjmlYX71oSiWNahNapnp'
+  
+  newBtnTextHolder = newBtnImg.parentElement
+    newBtnTextHolder.textContent = 'Request link'
+  
+  newBtn.onclick = function () {
+    window.open('https://forms.gle/1sHZNaG2KfnSLfKD9')
+  }
+    
+  portalButton.parentElement.prepend(newBtn)
+  
+  // 
+  //
+  // adds the searchbar to the sidebar
+  //
+  //
 
-searchbar = document.getElementsByClassName('Search--subContainer')[0].parentElement
+  searchbar = document.getElementsByClassName('Search--subContainer')[0].parentElement
+  
+  newBtn = searchbar.cloneNode(true)
+  
+  parent.prepend(newBtn)
+  
+  console.log(newBtn)
 
-newBtn = searchbar.cloneNode(true)
-
-parent.prepend(newBtn)
-
-console.log(newBtn)
+  injectAllStylesFromSave()
+}
