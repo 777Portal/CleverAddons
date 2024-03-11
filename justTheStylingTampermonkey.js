@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Clever addons
 // @namespace    http://tampermonkey.net/
-// @version      open_beta_0.1
+// @version      open_beta_0.1.1
 // @description  Yeh
 // @author       ExonAuto
 // @match        https://clever.com/in/*
@@ -9,53 +9,49 @@
 // @grant        none
 // ==/UserScript==
 
-//
-//
-// main styling
-//
-//
-
 var defaultSave = {
-    'CategoryNav--link': {
-      styleType: 'color', 
-      value:'' ,
-    },
-    'Sidebar--container': {
-      styleType: 'backgroundColor', 
-      value:'', 
-    },
-    'ResourceLink': {
-      styleType: 'backgroundColor', 
-      value:'',
-    },
-    'Portal--Resources': {
-      styleType: 'backgroundColor', 
-      value:'',
-    },
-    'ResourceLink--title': {
-      styleType: 'color', 
-      value:'',
-    },
-    'StudentTopBar--topBar': {
-      styleType: 'backgroundColor', 
-      value:'',
-    },
-    'CategoryNav--links': {
-      styleType: 'color', 
-      value:'',
-    },
-    'Category--title': {
-      styleType: 'color',
-      value: '',
-    }
+  'CategoryNav--link': {
+    styleType: 'color', 
+    value:'' ,
+  },
+  'Sidebar--container': {
+    styleType: 'backgroundColor', 
+    value:'', 
+  },
+  'ResourceLink': {
+    styleType: 'backgroundColor', 
+    value:'',
+  },
+  'Portal--Resources': {
+    styleType: 'backgroundColor', 
+    value:'',
+  },
+  'ResourceLink--title': {
+    styleType: 'color', 
+    value:'',
+  },
+  'StudentTopBar--topBar': {
+    styleType: 'backgroundColor', 
+    value:'',
+  },
+  'CategoryNav--links': {
+    styleType: 'color', 
+    value:'',
+  },
+  'Category--title': {
+    styleType: 'color',
+    value: '',
+  }
 }; 
   
 console.log( JSON.parse(localStorage.getItem('colorStorage')))
   
+// get json from local storage to be used in the thing
 colors = JSON.parse(localStorage.getItem('colorStorage')) ?? defaultSave
   
 defaultSave = JSON.parse(localStorage.getItem('colorStorage')) ?? defaultSave
   
+// if it doesn't exist just set it as a default save.
 if ( ! localStorage.getItem('colorStorage') ) localStorage.setItem('colorStorage', JSON.stringify(defaultSave));
   
 function injectAllStylesFromSave()
@@ -97,8 +93,8 @@ var theCustomHtml = `
   <p>Press enter after typing font size</p>
   <input type="text" value="16" id="fontSize" data-styletype="fontSize" data-classname="flexbox" /> change ui text size  
   <br>
-  <-- <input type="text" value="16" id="sidebarFontSize" data-styletype="fontSize" data-classname="Button--link " /> change sidebar text size  -->
-  <-- <br> -->
+  <!-- <input type="text" value="16" id="sidebarFontSize" data-styletype="fontSize" data-classname="Button--link " /> change sidebar text size  --!>
+  <!-- <br> --!>
   <br>
   <input type="color" value="#ff0000" id="linkColor" data-styletype="color" data-classname="CategoryNav--link" /> change sidebar text color  
   <br>
@@ -216,12 +212,9 @@ function changeSettingsToDarkMode()
       // sidebar bg
     changeStyle('Sidebar--container', 'backgroundColor', '#002c3e')
     changeSave('Sidebar--container', '', '#002c3e')
-  
-    // navlinks
-    // rafamode = {"CategoryNav--links":{"styleType":"color","value":""}}
-    // localStorage.setItem('colorStorage', JSON.stringify(rafamode));
   }
 
+// happens when clicking on the name dropdown menu.
 function addBackBtn() {
     menuArr = document.getElementsByClassName('Menu--itemWrapper')
   
@@ -249,21 +242,16 @@ function openColor()
     // don't have to add each for example
     var colorInputs = document.querySelectorAll("input[type=color]");
     colorInputs.forEach((colorbox) => {
-      // console.log(colorbox)
       classname = colorbox.dataset.classname
       styleType = colorbox.dataset.styletype
       
-      // console.log(classname, styleType)
-  
       firstElementOfType = document.getElementsByClassName(classname)[0] // .style[styleType] )
       style = window.getComputedStyle(firstElementOfType)[styleType];
-  
-      // console.log(style)
   
       colorbox.value = parseColor(style).hex
       console.log(colorbox.value, parseColor(style).hex)
   
-      // so added but not completed.
+      // so changed but not submitted.
       colorbox.addEventListener("input", (event) => {
         target = event.target
         classname = target.dataset.classname
@@ -318,6 +306,8 @@ function changeStyle(StyleClass, styleName, input) {
     }
 }
   
+// basically the color wheel only returns rgb, but the css needs to be a hex value, so we convert that rbg to hex before changing the style.
+
 function parseColor(color) 
   {
     var arr=[]; color.replace(/[\d+\.]+/g, function(v) { arr.push(parseFloat(v)); });
@@ -347,9 +337,6 @@ window.openColor = openColor;
 window.closeView = closeView;
 window.addBackBtn = addBackBtn;
   
-  
-  // const html = `<div data-focus-lock-disabled="false"><div class="DeweyModal DisplayNameModal--container"><div class="DeweyModal--Background" aria-hidden="true" data-testid="DeweyModal--Background"></div><div data-testid="DeweyModal--Window" class="DeweyModal--Window DisplayNameModal--container DeweyModal--size--medium" role="dialog" aria-modal="true" aria-labelledby="modalTitleID"><div class="DeweyModal--Header"><div class="DeweyModal--Header--text"><div class="DeweyModal--Header--title" role="heading" aria-level="2" id="modalTitleID">Change Display Name</div></div><button data-testid="DeweyModal--Header--close" aria-label="Close modal" class="DeweyButton Button Button--linkPlain Button--medium DeweyModal--Header--close Button--IconOnly" type="button"><span class="DeweyIcon material-symbols-rounded material-symbols-rounded--bold Icon--20" role="img" aria-label="close Icon">close</span></button></div><div class="DeweyModal--Content"><main><div class="DisplayNameModal--descriptionText">Change how your page looks.<br>Your teachers will also see this.</div><div class="TextInput dewey--formElementSize--fullWidth DisplayNameModal--nameInput"><div class="TextInput--infoRow"><label class="TextInput--label" for="Name">Name</label><span aria-live="polite"></span></div><input id="Name" class="TextInput--input" name="Name" type="text" aria-invalid="false" aria-label="Name" value="Rafa Rutherford"></div><button aria-label="Change back to legal name" class="Button Button--linkPlain Button--regular DisplayNameModal--resetButton" type="button">Change back to legal name</button><div class="AlertBox2 AlertBox2--info"><div class="AlertBox2--contentContainer"><div><span aria-hidden="true" class="fa fa-exclamation-circle fa-fw AlertBox2--icon AlertBox2--icon--info"></span></div><div class="AlertBox2--content"><div>Note to teachers: you can turn this feature off by accessing this student’s profile in your teacher Portal.</div></div></div><div class="AlertBox2--buttons"></div></div></main></div><div class="DeweyModal--Footer" data-testid="DeweyModal--Footer"><button aria-label="Save" class="DeweyButton Button Button--primary Button--medium" type="button"><span>Save</span></button><button aria-label="Cancel" class="DeweyButton Button Button--secondary Button--medium" type="button"><span>Cancel</span></button></div></div></div>,</div>`
-  
 window.onload = innit()
   
 function innit()
@@ -357,7 +344,7 @@ function innit()
     console.log('innit')
     
     try {
-      parent = document.getElementsByClassName('Sidebar--container')[0].children[0]
+      parent = document.getElementsByClassName('ResourceLink--link')[0].children[0]
       injectAllStylesFromSave()
     } 
     catch (e) 
